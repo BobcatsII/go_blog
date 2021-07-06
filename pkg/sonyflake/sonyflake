@@ -1,0 +1,51 @@
+package sonyflake
+
+import (
+	"fmt"
+	"github.com/sony/sonyflake"
+	"time"
+)
+//两个全局变量
+var (
+	sonyFlake *sonyflake.Sonyflake //实例，就像之前雪花算法的node一样
+	sonyMachineID uint64
+)
+
+//这个方法返回全局定义的MachineID值
+func getMachineID() (uint64, error){
+	return sonyMachineID, nil
+}
+
+//需传入当前的时间和机器ID
+func Init(startTime string, machineId uint64) (err error){
+	sonyMachineID = machineId
+	var st time.Time
+	st, err = time.Parse("2006-01-02", startTime)
+	if err != nil{
+		return err
+	}
+	settings := sonyflake.Settings{
+		StartTime: st,
+		MachineID: getMachineID,
+	}
+	sonyFlake = sonyflake.NewSonyflake(settings)
+	return
+}
+
+//GenID生成id
+func GenID() (id uint64, err error){
+	if sonyFlake == nil {
+		err = fmt.Errorf("sony flake not inited.")
+		return
+	}
+	//在这里生成值
+	id, err = sonyFlake.NextID()
+	return
+}
+
+func main() {
+	if err := Init("2020-07-05", 1); err != nil {
+		fmt.Printf("Init failed, err:%v\n", err)
+		return
+	}
+}
