@@ -14,17 +14,17 @@ log:
   max_backups: 7
 
 mysql:
-  host: "119.3.103.66"
+  host: "127.0.0.1"
   port: 3306
   user: root
-  password: "CWwOAKbfNhq6d6Cc"
+  password: "lnln"
   dbname: "goblog"
   max_open_conns: 200
   max_idel_conns: 50
 
 redis:
-  host: "119.3.103.66"
+  host: "127.0.0.1"
   port: 6379
   db: 0
-  password: "CWwOAKbfNhq6d6Cc"
+  password: "Lnln"
   pool_size: 100
