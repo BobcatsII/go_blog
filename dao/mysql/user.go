@@ -13,6 +13,12 @@ import (
 
 const secret = "wwxad13wq5rk35r34113ef23f232f"
 
+var (
+	ErrorUserExist       = errors.New("User Exist!")
+	ErrorUserNotExist    = errors.New("用户不存在")
+	ErrorInvalidPassword = errors.New("用户名或密码错误")
+)
+
 // InsertUser 向数据库中插入一条新的用户记录
 func InsertUser(user *models.User) (err error) {
 	// 对password的值进行加密
@@ -31,13 +37,13 @@ func CheckUserExist(username string) (err error) {
 		return err
 	}
 	if count > 0 {
-		return errors.New("User Exist!")
+		return ErrorUserExist
 	}
 	return
 }
 
 // encryptPassword 加密密码
-func encryptPassword(oPassword string) (string) {
+func encryptPassword(oPassword string) string {
 	h := md5.New()
 	h.Write([]byte(secret))
 	// 下面将h.Sum生成的字符转换成16进制的字符串
@@ -47,18 +53,18 @@ func encryptPassword(oPassword string) (string) {
 func Login(user *models.User) (err error) {
 	oPassword := user.Password // 用户登录的密码
 	sqlStr := `select user_id, username, password from user where username=?`
-	err = db.Get (user, sqlStr, user.Username)
-	if err == sql.ErrNoRows{
-		return errors.New("用户不存在")
+	err = db.Get(user, sqlStr, user.Username)
+	if err == sql.ErrNoRows {
+		return ErrorUserNotExist
 	}
-	if err != nil{
+	if err != nil {
 		//查询数据库失败
 		return err
 	}
 	//判断密码是否正确
 	password := encryptPassword(oPassword)
 	if password != user.Password {
-		return errors.New("密码错误")
+		return ErrorInvalidPassword
 	}
 	return
 }
