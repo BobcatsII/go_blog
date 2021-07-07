@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go_blog/controllers"
 	"go_blog/logger"
+	"go_blog/middlewares"
 	"net/http"
 )
 
@@ -20,6 +21,9 @@ func SetupRouter(mode string) *gin.Engine {
 	//注册业务路由
 	r.POST("/signup", controllers.SignUpHandler)
 	r.POST("/login", controllers.LoginHandler)
+	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
+	})
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": "404",
@@ -27,3 +31,5 @@ func SetupRouter(mode string) *gin.Engine {
 	})
 	return r
 }
+
+

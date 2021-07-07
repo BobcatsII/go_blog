@@ -3,6 +3,7 @@ package logic
 import (
 	"go_blog/dao/mysql"
 	"go_blog/models"
+	"go_blog/pkg/jwt"
 	"go_blog/pkg/snowflake"
 )
 
@@ -16,10 +17,10 @@ func SignUp(p *models.ParamSignUp) (err error) {
 		return err
 	}
 	// 1.生成UID
-	userID:=snowflake.GenID()
+	userID := snowflake.GenID()
 	// 构造一个User实例
 	user := &models.User{
-		UserID: userID,
+		UserID:   userID,
 		Username: p.Username,
 		Password: p.Password,
 	}
@@ -29,11 +30,15 @@ func SignUp(p *models.ParamSignUp) (err error) {
 	// 3.redis.xxx ...
 }
 
-func Login(p *models.ParamLogin) error {
+func Login(p *models.ParamLogin) (token string, err error) {
 	user := &models.User{
 		Username: p.Username,
 		Password: p.Password,
 	}
-	return mysql.Login(user)
-
+	// 传递的是指针，就能拿到user.UserID了
+	if err := mysql.Login(user); err != nil {
+		return "", err
+	}
+	//生成JWT
+	return jwt.GenToken(user.UserID, user.Username)
 }

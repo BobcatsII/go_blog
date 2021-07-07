@@ -57,7 +57,7 @@ func Init() (err error) {
 	// 方式2: 指定配置文件名和配置文件位置，viper自行查找可用的配置文件
 	// 注意: ①配置文件名不需要带后缀; ②配置文件路径可配置多个，多写几行AddConfigPath
 	viper.SetConfigName("config") //指定配置文件名(不需要带后缀)
-	viper.AddConfigPath(".")      //指定查找配置文件的路径(相对路径)
+	viper.AddConfigPath("./conf")      //指定查找配置文件的路径(相对路径)
 
 	// 另外，下面的配置是配合远程配置中心使用的，告诉viper当前数据使用什么格式去解析
 	// viper.SetConfigType("yaml")   //专用于从远程获取配置信息时指定配置文件类型的

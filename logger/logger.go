@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"fmt"
 	"go_blog/settings"
 	"net"
 	"net/http"
@@ -34,7 +33,6 @@ func Init(cfg *settings.LogConfig, mode string) (err error) {
 		return
 	}
 	var core zapcore.Core
-	fmt.Printf("ttttttt:%v\n", mode)
 	if mode == "dev" {
 		//进入开发模式，将日志输出到终端
 		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
