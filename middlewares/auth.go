@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-const CtxtUserIDKey = "userID"
-
 //此文件为认证文件
 // JWTAuthMiddleware 基于JWT的认证中间件
 func JWTAuthMiddleware() func(c *gin.Context) {
@@ -38,7 +36,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			return
 		}
 		// 将当前请求的userID信息保存到请求的上下文c上
-		c.Set(CtxtUserIDKey, mc.UserID)
+		c.Set(controllers.CtxtUserIDKey, mc.UserID)
 		c.Next() // 后续的处理请求的函数追踪可以用过c.Get("username")来获取当前请求的用户信息
 	}
 }
